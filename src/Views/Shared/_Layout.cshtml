@@ -1,0 +1,38 @@
+@{
+    Layout = null;
+    var title = "LettersApp";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="~/pico.min.css">
+    <style>
+        main { max-width: 960px; margin: 2rem auto; }
+        .flash { color: #a00; }
+        .hint { font-size: .9rem; opacity: .8; }
+        pre { background: #f6f8fa; padding: .75rem; overflow: auto; }
+        code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; }
+    </style>
+</head>
+<body>
+    <main>
+        <header>
+            <h2>Bulk Letters Generator</h2>
+            <p class="hint">Upload your addressee CSV and (optionally) a custom template. You’ll get back a single HTML file with one letter per page.</p>
+            @if (TempData["Error"] is string err)
+            {
+                <p class="flash"><strong>Error:</strong> @err</p>
+            }
+        </header>
+        <section>
+            @RenderBody()
+        </section>
+        <footer style="margin-top:2rem;">
+            <small>ASP.NET (.NET 8) • MVC + Web API</small>
+        </footer>
+    </main>
+</body>
+</html>

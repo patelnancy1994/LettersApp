@@ -1,0 +1,17 @@
+@{
+    ViewData["Title"] = "Upload";
+}
+<form method="post" enctype="multipart/form-data" asp-action="Generate">
+    <div>
+        <label>CSV file (required) </label>
+            <input type="file" name="csv" accept=".csv" required />
+    </div>
+    <button type="submit">Generate Letters HTML</button>
+</form>
+
+<div style="margin-top:1rem;">
+    <h3>Info : CSV format</h3>
+    <p>Use a header row, Supported columns:</p>
+    <p>ContactPerson,StreetAddress,Suburb,State,PostCode,FirstName,CardNumber,ExpireDate</p>
+</div>
+
