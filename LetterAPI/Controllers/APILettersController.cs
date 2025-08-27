@@ -2,6 +2,7 @@
 using LetterAPI.Services;
 using LettersApp.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using System.Globalization;
 using System.Text;
 
@@ -15,23 +16,29 @@ namespace LetterAPI.Controllers
         private readonly SenderSettings _sender;
         private readonly ILogger<APILettersController> _logger;
         private readonly IWebHostEnvironment _env;
+        private readonly IConfiguration _configuration;
 
-        public APILettersController(IHtmlTemplateSetup engine, SenderSettings sender, ILogger<APILettersController> logger, IWebHostEnvironment env)
+        public APILettersController(IHtmlTemplateSetup engine, SenderSettings sender, ILogger<APILettersController> logger, IWebHostEnvironment env, IConfiguration configuration)
         {
             _engine = engine;
             _sender = sender;
             _logger = logger;
             _env = env;
+            _configuration = configuration;
         }
 
         [HttpPost]
-        [RequestSizeLimit(1024L * 1024 * 100)]
         public async Task<IActionResult> Generate([FromForm]GenerateLettersRequest req)
         {
             try
-            {
+            {                
                 if (req.Csv is null || req.Csv.Length == 0)
                     return BadRequest("CSV file is required.");
+
+                int FileSizeValid = _configuration.GetValue<int>("FileSize");
+                long maxFileSizeInBytes = FileSizeValid * 1024 * 1024;
+                if (req.Csv.Length > maxFileSizeInBytes)
+                    return BadRequest($"File size is exceeds {FileSizeValid} mb limit.");
 
                 string templateHtml;
                 var defaultPath = Path.Combine(_env.WebRootPath ?? "wwwroot", "templates", "SixtyDaysLetterPrompt.html");
