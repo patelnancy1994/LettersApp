@@ -1,7 +1,5 @@
 ﻿using LetterAPI.Services;
-using LettersApp.Controllers;
 using LettersApp.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Text;
 
