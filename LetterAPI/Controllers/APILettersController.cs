@@ -33,10 +33,10 @@ namespace LetterAPI.Controllers
         #endregion
 
         [HttpPost]
-        public async Task<IActionResult> Generate([FromForm]GenerateLettersRequest req)
+        public async Task<IActionResult> Generate([FromForm] GenerateLettersRequest req)
         {
             try
-            {                
+            {
                 if (req.Csv is null || req.Csv.Length == 0)
                     return BadRequest("CSV file is required.");
 
@@ -46,8 +46,12 @@ namespace LetterAPI.Controllers
                     return BadRequest($"File size is exceeds {FileSizeValid} mb limit.");
 
                 string templateHtml;
-                var defaultPath = Path.Combine(_env.WebRootPath ?? "wwwroot", "templates", "SixtyDaysLetterPrompt.html");
-                if (!System.IO.File.Exists(defaultPath)) return NotFound("Default template not found.");
+                var webRoot = _env.WebRootPath ?? Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+                var defaultPath = Path.Combine(webRoot, "templates", "SixtyDaysLetterPrompt.html");
+
+                if (!System.IO.File.Exists(defaultPath))
+                    return NotFound("Default template not found.");
+
                 templateHtml = await System.IO.File.ReadAllTextAsync(defaultPath);
 
                 using var csvStream = req.Csv.OpenReadStream();
@@ -55,7 +59,6 @@ namespace LetterAPI.Controllers
                 using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
 
                 var sb = new StringBuilder();
-
                 sb.AppendLine("""
                     <!DOCTYPE html>  
                     <html>
@@ -83,7 +86,6 @@ namespace LetterAPI.Controllers
                     sb.AppendLine("</section>");
                 }
                 sb.AppendLine("</body></html>");
-
                 var bytes = Encoding.UTF8.GetBytes(sb.ToString());
                 var fileName = $"letters_{DateTime.UtcNow:yyyyMMdd_HHmmss}.html";
                 return File(bytes, "text/html", fileName);
