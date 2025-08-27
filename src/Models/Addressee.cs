@@ -1,6 +1,6 @@
 namespace LettersApp.Models;
 
-public sealed class Addressee
+public class Addressee
 {
     public string ContactPerson { get; set; } = "";
     public string StreetAddress { get; set; } = "";

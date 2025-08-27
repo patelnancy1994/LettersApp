@@ -1,6 +1,6 @@
-namespace LetterAPI.Services;
+namespace LetterAPI.Models;
 
-public sealed class SenderSettings
+public class SenderSettings
 {
     public string CompanyName { get; set; } = "";
     public string AddressLine1 { get; set; } = "";

@@ -1,14 +1,17 @@
+using LettersApp.Models;
 using Microsoft.AspNetCore.Mvc;
 namespace LettersApp.Controllers;
-public sealed class UploadController : Controller
+public class UploadController : Controller
 {
     private readonly ILogger<UploadController> _logger;
+    private readonly ApiSettings _apiSettings;
     private readonly IWebHostEnvironment _env;
 
-    public UploadController(ILogger<UploadController> logger, IWebHostEnvironment env)
+    public UploadController(ILogger<UploadController> logger, IWebHostEnvironment env, ApiSettings apiSettings)
     {
         _logger = logger;
         _env = env;
+        _apiSettings = apiSettings;
     }
 
     [HttpGet]
@@ -32,10 +35,7 @@ public sealed class UploadController : Controller
             var csvStream = csv.OpenReadStream();
             content.Add(new StreamContent(csvStream), "Csv", csv.FileName);
 
-            //var baseUrl = $"{Request.Scheme}://{Request.Host}";
-            //var resp = await http.PostAsync($"{baseUrl}/api/LettersApi/Generate", content);
-
-            var baseUrl = "https://localhost:7150";
+            var baseUrl = _apiSettings.BaseUrl;
             var resp = await http.PostAsync($"{baseUrl}/api/APILetters/Generate", content);
 
             if (!resp.IsSuccessStatusCode)

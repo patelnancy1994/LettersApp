@@ -1,3 +1,4 @@
+using LetterAPI.Models;
 using LetterAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);

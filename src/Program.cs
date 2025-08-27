@@ -1,8 +1,13 @@
+using LettersApp.Models;
 using Microsoft.AspNetCore.Http.Features;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
+builder.Services.Configure<ApiSettings>(
+    builder.Configuration.GetSection("APIInfo"));
+builder.Services.AddSingleton(resolver =>
+    resolver.GetRequiredService<Microsoft.Extensions.Options.IOptions<ApiSettings>>().Value);
 
 builder.Services.Configure<FormOptions>(options =>
 {
